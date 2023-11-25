@@ -22,4 +22,5 @@ recognition.onresult = on_results;
 
 function on_results(e) {
     document.getElementById("text").innerHTML += "You said:  " + e.results[0][0].transcript + ", accuracy: " + e.results[0][0].confidence + "<br>";
+    recognition.stop();
 }
