@@ -5,22 +5,29 @@ var recognition = new webkitSpeechRecognition();
 recognition.lang = 'en-US';
 
 function on_touch() {
-    if (recognition.start) {
+    if (!recognition.started) {
         recognition.start();
         recognition.started = true;
     }
 }
 
-function onend() {
-    recognition.stop();
+recognition.onend = function () {
     recognition.started = false;
-}
+};
 
-recognition.onend = onend;
-recognition.onspeechend = onend;
-recognition.onresult = on_results;
-
-function on_results(e) {
-    document.getElementById("text").innerHTML += "You said:  " + e.results[0][0].transcript + ", accuracy: " + e.results[0][0].confidence + "<br>";
+recognition.onresult = function (e) {
+    var transcript = e.results[0][0].transcript;
+    document.getElementById("text").innerHTML = "You said: " + transcript + "<br>";
     recognition.stop();
-}
+};
+
+recognition.onspeechend = function () {
+    recognition.stop();
+};
+
+recognition.onerror = function (e) {
+    console.error('Speech recognition error:', e);
+};
+
+document.getElementById("text").innerHTML = "Click to start recording...";
+
